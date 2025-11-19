@@ -1,5 +1,6 @@
 import React, { JSX } from "react";
 import Nav from "../../components/Nav";
+import { Link } from "react-router-dom";
 
 function FeatureCard({
   title,
@@ -23,7 +24,6 @@ export default function Home(): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col">
       <Nav />
-
       {/* Hero */}
       <main className="flex-1">
         <section className="bg-gradient-to-r from-slate-50 to-white">
@@ -39,12 +39,13 @@ export default function Home(): JSX.Element {
               </p>
 
               <div className="mt-8 flex gap-4">
-                <a
-                  href="#lessons"
+                <Link
+                  to="/login"
                   className="inline-flex items-center px-6 py-3 rounded-md bg-brand text-white font-semibold shadow hover:opacity-95"
                 >
-                  Explore lessons
-                </a>
+                  Sign in
+                </Link>
+
                 <a
                   href="#features"
                   className="inline-flex items-center px-6 py-3 rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50"
@@ -92,9 +93,12 @@ export default function Home(): JSX.Element {
                     <div className="text-sm font-medium">
                       Operations on Fractions
                     </div>
-                    <button className="mt-2 inline-block px-3 py-1 rounded bg-accent text-white text-xs">
-                      Start
-                    </button>
+                    <Link
+                      to="/login"
+                      className="mt-2 inline-block px-3 py-1 rounded bg-accent text-white text-xs"
+                    >
+                      Start (login)
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -102,7 +106,7 @@ export default function Home(): JSX.Element {
           </div>
         </section>
 
-        {/* Features */}
+        {/* rest of page (features, lessons, CTA) */}
         <section id="features" className="max-w-7xl mx-auto px-6 py-12">
           <h3 className="text-2xl font-bold text-brand mb-6">Core features</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -118,109 +122,8 @@ export default function Home(): JSX.Element {
               Points: +10 correct, −5 incorrect. Points are added to student's
               balance after each submission.
             </FeatureCard>
-            <FeatureCard title="Teacher Dashboard" icon="📊">
-              Reports, per-student attempts, export and performance analytics
-              for each lesson and exercise.
-            </FeatureCard>
-            <FeatureCard title="Role-based Access" icon="🔒">
-              Admin / Teacher / Student roles with RBAC and secure
-              authentication.
-            </FeatureCard>
-            <FeatureCard title="Scalable Architecture" icon="☁️">
-              Designed for cloud deployment: PostgreSQL, Redis, object storage
-              and worker queues.
-            </FeatureCard>
           </div>
         </section>
-
-        {/* Lessons preview */}
-        <section id="lessons" className="max-w-7xl mx-auto px-6 py-12">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-bold text-brand">Example lessons</h3>
-            <a href="#" className="text-sm text-accent hover:underline">
-              View all lessons
-            </a>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <article className="bg-white rounded-lg shadow p-6">
-              <h4 className="font-semibold">Mathematics — Fractions</h4>
-              <p className="text-sm text-slate-500 mt-2">
-                Grade 6 • 2 exercises
-              </p>
-              <div className="mt-4 flex gap-3">
-                <a className="px-3 py-2 rounded bg-brand text-white text-sm">
-                  Open
-                </a>
-                <a className="px-3 py-2 rounded border text-sm">Progress</a>
-              </div>
-            </article>
-
-            <article className="bg-white rounded-lg shadow p-6">
-              <h4 className="font-semibold">Science — Digestive System</h4>
-              <p className="text-sm text-slate-500 mt-2">
-                Grade 6 • 2 exercises
-              </p>
-              <div className="mt-4 flex gap-3">
-                <a className="px-3 py-2 rounded bg-brand text-white text-sm">
-                  Open
-                </a>
-                <a className="px-3 py-2 rounded border text-sm">Progress</a>
-              </div>
-            </article>
-
-            <article className="bg-white rounded-lg shadow p-6">
-              <h4 className="font-semibold">English — Tenses</h4>
-              <p className="text-sm text-slate-500 mt-2">
-                Grade 6 • 2 exercises
-              </p>
-              <div className="mt-4 flex gap-3">
-                <a className="px-3 py-2 rounded bg-brand text-white text-sm">
-                  Open
-                </a>
-                <a className="px-3 py-2 rounded border text-sm">Progress</a>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="bg-slate-50">
-          <div className="max-w-7xl mx-auto px-6 py-12 text-center">
-            <h3 className="text-2xl font-bold">Ready to try Injaz?</h3>
-            <p className="mt-2 text-slate-600">
-              Get a demo instance or sign up as a teacher to create lessons.
-            </p>
-            <div className="mt-6 flex justify-center gap-4">
-              <button className="px-6 py-3 rounded bg-brand text-white font-semibold">
-                Request demo
-              </button>
-              <button className="px-6 py-3 rounded border text-slate-700">
-                Sign up (teacher)
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <footer className="border-t bg-white">
-          <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              <div className="text-sm font-semibold">Injaz</div>
-              <div className="text-xs text-slate-500">
-                © {new Date().getFullYear()} Injaz — Education platform
-              </div>
-            </div>
-
-            <div className="text-sm text-slate-500">
-              <a className="hover:underline mr-4" href="#">
-                Privacy
-              </a>
-              <a className="hover:underline" href="#">
-                Terms
-              </a>
-            </div>
-          </div>
-        </footer>
       </main>
     </div>
   );

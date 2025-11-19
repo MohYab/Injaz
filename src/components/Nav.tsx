@@ -1,4 +1,5 @@
 import React, { JSX } from "react";
+import { Link } from "react-router-dom";
 
 export default function Nav(): JSX.Element {
   return (
@@ -15,21 +16,21 @@ export default function Nav(): JSX.Element {
         </div>
 
         <nav className="flex items-center gap-4">
-          <a className="text-slate-600 hover:text-brand" href="#lessons">
+          <Link className="text-slate-600 hover:text-brand" to="#lessons">
             Lessons
-          </a>
-          <a className="text-slate-600 hover:text-brand" href="#features">
+          </Link>
+          <Link className="text-slate-600 hover:text-brand" to="#features">
             Features
-          </a>
+          </Link>
 
-          {/* Very visible login link */}
-          <a
-            href="/login"
+          {/* react-router Link to login route */}
+          <Link
+            to="/login"
             className="ml-4 px-4 py-2 rounded-md bg-orange-500 text-white text-sm font-semibold shadow hover:opacity-90"
             id="injaz-login-btn"
           >
             Sign in
-          </a>
+          </Link>
         </nav>
       </div>
     </header>
