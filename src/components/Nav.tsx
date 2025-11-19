@@ -1,10 +1,6 @@
 import React, { JSX } from "react";
 
-type NavProps = {
-  onSignIn?: () => void;
-};
-
-export default function Nav({ onSignIn }: NavProps): JSX.Element {
+export default function Nav(): JSX.Element {
   return (
     <header className="bg-white border-b">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -25,15 +21,15 @@ export default function Nav({ onSignIn }: NavProps): JSX.Element {
           <a className="text-slate-600 hover:text-brand" href="#features">
             Features
           </a>
-          <a className="text-slate-600 hover:text-brand" href="#teachers">
-            Teachers
-          </a>
-          <button
-            onClick={onSignIn}
-            className="ml-4 px-4 py-2 rounded-md bg-gradient-to-r from-primary to-accent text-white text-sm font-medium shadow"
+
+          {/* Very visible login link */}
+          <a
+            href="/login"
+            className="ml-4 px-4 py-2 rounded-md bg-orange-500 text-white text-sm font-semibold shadow hover:opacity-90"
+            id="injaz-login-btn"
           >
             Sign in
-          </button>
+          </a>
         </nav>
       </div>
     </header>
