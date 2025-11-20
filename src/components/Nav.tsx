@@ -1,36 +1,70 @@
 import React, { JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Nav(): JSX.Element {
+  const navigate = useNavigate();
+  const token =
+    typeof window !== "undefined" &&
+    (sessionStorage.getItem("injaz_token") ||
+      localStorage.getItem("injaz_token"));
+
+  const handleSignOut = () => {
+    try {
+      sessionStorage.removeItem("injaz_token");
+      sessionStorage.removeItem("injaz_user");
+      localStorage.removeItem("injaz_token");
+      localStorage.removeItem("injaz_user");
+    } catch (e) {}
+    navigate("/login", { replace: true });
+  };
+
   return (
-    <header className="bg-white border-b">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <header className="site-header">
+      <div className="container-max flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center text-white font-bold">
-            IJ
-          </div>
+          <div className="brand-badge">IJ</div>
           <div>
             <h1 className="text-lg font-semibold text-brand">Injaz</h1>
-            <p className="text-sm text-slate-500">Exercises platform</p>
+            <p className="text-sm muted">Exercises platform</p>
           </div>
         </div>
 
-        <nav className="flex items-center gap-4">
-          <Link className="text-slate-600 hover:text-brand" to="#lessons">
+        <nav className="site-nav">
+          <a className="text-slate-600 hover:text-brand" href="#lessons">
             Lessons
-          </Link>
-          <Link className="text-slate-600 hover:text-brand" to="#features">
+          </a>
+          <a className="text-slate-600 hover:text-brand" href="#features">
             Features
-          </Link>
+          </a>
 
-          {/* react-router Link to login route */}
-          <Link
-            to="/login"
-            className="ml-4 px-4 py-2 rounded-md bg-orange-500 text-white text-sm font-semibold shadow hover:opacity-90"
-            id="injaz-login-btn"
-          >
-            Sign in
-          </Link>
+          {token ? (
+            <>
+              <Link to="/dashboard" className="btn-primary ml-4">
+                Dashboard
+              </Link>
+              <button onClick={handleSignOut} className="btn-ghost ml-2">
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="btn-accent ml-4"
+                id="injaz-login-btn"
+              >
+                Sign in
+              </Link>
+
+              <Link
+                to="/signup"
+                className="btn-ghost ml-2"
+                id="injaz-signup-btn"
+              >
+                Sign up
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </header>

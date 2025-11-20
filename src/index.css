@@ -2,83 +2,141 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom utilities / small theme tweaks */
+/* Global design tokens */
 :root {
   --brand: #0f172a;
-  --accent: #06b6d4;
+  --accent: #f97316;
+  --muted: #64748b;
+  --card-bg: #ffffff;
+  --page-bg: #f8fafc;
+  --radius: 0.5rem;
+  --shadow-sm: 0 1px 2px rgba(2, 6, 23, 0.04);
+  --shadow-md: 0 6px 18px rgba(2, 6, 23, 0.06);
 }
 
-/* Simple page container */
-.app-container {
-  @apply min-h-screen bg-slate-50 text-slate-900;
+/* Small set of utility classes mapping to tokens */
+.text-brand {
+  color: var(--brand);
+}
+.bg-accent {
+  background-color: var(--accent);
+}
+.text-accent {
+  color: var(--accent);
+}
+.text-muted {
+  color: var(--muted);
+}
+.bg-page {
+  background-color: var(--page-bg);
 }
 
-/*:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* Component styles grouped under Tailwind layers */
+@layer components {
+  .app-container {
+    @apply min-h-screen bg-page text-slate-900;
   }
-  a:hover {
-    color: #747bff;
+
+  .container-max {
+    @apply max-w-7xl mx-auto px-6;
   }
-  button {
-    background-color: #f9f9f9;
+
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    @apply p-6;
+  }
+  .card-lg {
+    box-shadow: var(--shadow-md);
+    @apply p-8 rounded-xl;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-opacity;
+  }
+  .btn-primary {
+    @apply btn px-4 py-2 text-white;
+    background-color: var(--brand);
+  }
+  .btn-accent {
+    @apply btn px-4 py-2 text-white;
+    background-color: var(--accent);
+  }
+  .btn-ghost {
+    @apply btn px-4 py-2 border border-slate-200 text-slate-700 bg-transparent;
+  }
+  .btn-sm {
+    @apply px-3 py-1 text-sm;
+  }
+
+  .form-field {
+    @apply mt-1 block w-full rounded-md border border-gray-200 shadow-sm px-3 py-2 focus:outline-none;
+  }
+  .form-field:focus {
+    @apply ring-2 ring-offset-0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.08);
+  }
+
+  .input-with-button {
+    position: relative;
+  }
+  .input-with-button .form-field {
+    padding-right: 3rem;
+  }
+  .input-button {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    @apply text-sm text-slate-500 px-2;
+    background: transparent;
+    border: none;
+  }
+
+  .site-header {
+    @apply bg-white border-b;
+  }
+  .site-nav {
+    @apply flex items-center gap-4;
+  }
+  .brand-badge {
+    @apply w-10 h-10 rounded-md flex items-center justify-center text-white font-bold;
+    background-color: var(--accent);
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+  .rounded-lg-md {
+    border-radius: 0.75rem;
+  }
+
+  .alert {
+    @apply p-3 rounded-md text-sm;
+  }
+  .alert-error {
+    @apply alert bg-red-50 text-red-700;
+  }
+  .alert-success {
+    @apply alert bg-green-50 text-green-700;
   }
 }
-*/
+
+.hero {
+  @apply py-16 lg:py-24;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@layer utilities {
+  .hide-mobile {
+    @apply hidden md:block;
+  }
+  .only-mobile {
+    @apply block md:hidden;
+  }
+}

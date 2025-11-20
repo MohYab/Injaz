@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 
 type LoginResponse = {
   token?: string;
@@ -35,7 +35,6 @@ export default function Login(): JSX.Element {
 
     setLoading(true);
     try {
-      // Replace the URL below with your real auth endpoint
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -53,12 +52,10 @@ export default function Login(): JSX.Element {
       }
 
       if (data.token) {
-        // store token -- consider httpOnly cookie from backend for production
         const storage = remember ? localStorage : sessionStorage;
         storage.setItem("injaz_token", data.token);
         storage.setItem("injaz_user", JSON.stringify(data.user ?? {}));
-        // redirect to dashboard / root
-        window.location.href = "/";
+        window.location.href = "/dashboard";
       } else {
         setError("Login succeeded but no token returned by server.");
       }
@@ -71,10 +68,10 @@ export default function Login(): JSX.Element {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8">
+    <div className="min-h-screen flex items-center justify-center bg-page px-4">
+      <div className="max-w-md w-full card">
         <h1 className="text-2xl font-bold text-brand mb-2">Sign in to Injaz</h1>
-        <p className="text-sm text-slate-500 mb-6">
+        <p className="text-sm muted mb-6">
           Enter your school account to access lessons and exercises.
         </p>
 
@@ -91,7 +88,7 @@ export default function Login(): JSX.Element {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-200 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+              className="form-field"
               placeholder="you@example.com"
               required
             />
@@ -104,13 +101,13 @@ export default function Login(): JSX.Element {
             >
               Password
             </label>
-            <div className="mt-1 relative">
+            <div className="input-with-button mt-1 relative">
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full rounded-md border-gray-200 shadow-sm px-3 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-accent"
+                className="form-field"
                 placeholder="••••••••"
                 required
                 minLength={6}
@@ -118,7 +115,7 @@ export default function Login(): JSX.Element {
               <button
                 type="button"
                 onClick={() => setShowPassword((s) => !s)}
-                className="absolute inset-y-0 right-2 px-2 text-sm text-slate-500"
+                className="input-button"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? "Hide" : "Show"}
@@ -134,9 +131,8 @@ export default function Login(): JSX.Element {
                 onChange={(e) => setRemember(e.target.checked)}
                 className="h-4 w-4 text-accent rounded border-gray-300"
               />
-              <span className="text-sm text-slate-600">Remember me</span>
+              <span className="text-sm muted">Remember me</span>
             </label>
-
             <a href="#" className="text-sm text-accent hover:underline">
               Forgot password?
             </a>
@@ -146,22 +142,22 @@ export default function Login(): JSX.Element {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-brand text-white font-semibold hover:opacity-95 disabled:opacity-60"
+              className="btn-accent w-full"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </div>
 
-          <div className="text-center text-sm text-slate-500">
+          <div className="text-center text-sm muted">
             Don't have an account?{" "}
-            <a href="#" className="text-accent hover:underline">
+            <a href="/signup" className="text-accent hover:underline">
               Request access
             </a>
           </div>
         </form>
 
         <div role="status" aria-live="polite" className="mt-4">
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="alert alert-error">{error}</p>}
         </div>
       </div>
     </div>
