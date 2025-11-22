@@ -2,141 +2,264 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global design tokens */
+/* Google fonts used: Inter (body) + Merriweather (hero headings) */
+/* Colors and tokens inspired by zuolfa.com */
 :root {
-  --brand: #0f172a;
-  --accent: #f97316;
-  --muted: #64748b;
-  --card-bg: #ffffff;
-  --page-bg: #f8fafc;
-  --radius: 0.5rem;
-  --shadow-sm: 0 1px 2px rgba(2, 6, 23, 0.04);
-  --shadow-md: 0 6px 18px rgba(2, 6, 23, 0.06);
+  --bg: #ffffff;
+  --surface: #fbfdff;
+  --muted: #6b7280;
+  --text: #0f172a;
+  --accent: #0ea5a4; /* teal-ish accent */
+  --accent-600: #059c94;
+  --accent-700: #047a6f;
+  --shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --radius: 12px;
+  --glass: rgba(255, 255, 255, 0.6);
 }
 
-/* Small set of utility classes mapping to tokens */
+/* Base typography */
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, #fbfdff 0%, #f7fbfc 100%);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility shortcuts */
 .text-brand {
-  color: var(--brand);
-}
-.bg-accent {
-  background-color: var(--accent);
-}
-.text-accent {
-  color: var(--accent);
+  color: var(--text);
 }
 .text-muted {
   color: var(--muted);
 }
 .bg-page {
-  background-color: var(--page-bg);
+  background: var(--bg);
 }
 
-/* Component styles grouped under Tailwind layers */
+/* Component tokens built to mimic zuolfa look */
 @layer components {
-  .app-container {
-    @apply min-h-screen bg-page text-slate-900;
+  /* Container */
+  .container-wide {
+    @apply max-w-6xl mx-auto px-6;
   }
 
-  .container-max {
-    @apply max-w-7xl mx-auto px-6;
+  /* Header / Nav */
+  .site-header {
+    background: transparent;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .site-header .nav-inner {
+    @apply flex items-center justify-between py-6;
+  }
+  .brand {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .brand .logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-600));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+  }
+  .brand .title {
+    line-height: 1;
+  }
+  .brand .title h1 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0;
+  }
+  .brand .subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 2px;
   }
 
-  .card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
-    @apply p-6;
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
   }
-  .card-lg {
-    box-shadow: var(--shadow-md);
-    @apply p-8 rounded-xl;
+  .nav-links a {
+    color: var(--muted);
+    font-weight: 500;
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+  }
+  .nav-links a:hover {
+    color: var(--text);
+    background: rgba(15, 23, 42, 0.03);
   }
 
+  .cta {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-opacity;
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s;
+    box-shadow: var(--shadow-sm);
   }
   .btn-primary {
-    @apply btn px-4 py-2 text-white;
-    background-color: var(--brand);
-  }
-  .btn-accent {
-    @apply btn px-4 py-2 text-white;
-    background-color: var(--accent);
+    background: linear-gradient(90deg, var(--accent), var(--accent-600));
+    color: white;
   }
   .btn-ghost {
-    @apply btn px-4 py-2 border border-slate-200 text-slate-700 bg-transparent;
-  }
-  .btn-sm {
-    @apply px-3 py-1 text-sm;
-  }
-
-  .form-field {
-    @apply mt-1 block w-full rounded-md border border-gray-200 shadow-sm px-3 py-2 focus:outline-none;
-  }
-  .form-field:focus {
-    @apply ring-2 ring-offset-0;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.08);
+    background: transparent;
+    color: var(--text);
+    border: 1px solid rgba(15, 23, 42, 0.06);
   }
 
-  .input-with-button {
+  /* Hero */
+  .hero {
+    padding: 5.5rem 0;
     position: relative;
   }
-  .input-with-button .form-field {
-    padding-right: 3rem;
+  .hero-inner {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-10 items-center;
   }
-  .input-button {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    @apply text-sm text-slate-500 px-2;
-    background: transparent;
-    border: none;
+  .hero-h {
+    font-family: "Merriweather", serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: 1.02;
+    color: var(--text);
+    margin: 0 0 0.75rem 0;
   }
-
-  .site-header {
-    @apply bg-white border-b;
-  }
-  .site-nav {
-    @apply flex items-center gap-4;
-  }
-  .brand-badge {
-    @apply w-10 h-10 rounded-md flex items-center justify-center text-white font-bold;
-    background-color: var(--accent);
-  }
-
-  .muted {
+  .hero-sub {
     color: var(--muted);
-  }
-  .rounded-lg-md {
-    border-radius: 0.75rem;
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
   }
 
+  /* Promo card / illustration box on hero right */
+  .promo {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.85)
+    );
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.04);
+  }
+
+  /* Feature cards */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .feature {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.03);
+  }
+  .feature h4 {
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+  }
+  .feature p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  /* Forms - inputs & cards */
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+    border: 1px solid rgba(15, 23, 42, 0.04);
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+    color: #111827;
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+  }
+  .form-input {
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    background: #ffffff;
+    outline: none;
+    transition: box-shadow 0.12s ease, border-color 0.12s ease;
+  }
+  .form-input:focus {
+    box-shadow: 0 6px 20px rgba(14, 165, 164, 0.12);
+    border-color: var(--accent-600);
+  }
+
+  .small-muted {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* Alerts */
   .alert {
-    @apply p-3 rounded-md text-sm;
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
   }
   .alert-error {
-    @apply alert bg-red-50 text-red-700;
+    background: #fff1f2;
+    color: #7f1d1d;
+    border: 1px solid rgba(127, 29, 29, 0.06);
   }
   .alert-success {
-    @apply alert bg-green-50 text-green-700;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid rgba(6, 95, 70, 0.06);
+  }
+
+  /* Footer (optional) */
+  .site-footer {
+    margin-top: 4rem;
+    padding: 3rem 0;
+    color: var(--muted);
   }
 }
 
-.hero {
-  @apply py-16 lg:py-24;
-}
-
-:focus:not(:focus-visible) {
-  outline: none;
-}
-
-@layer utilities {
-  .hide-mobile {
-    @apply hidden md:block;
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .only-mobile {
-    @apply block md:hidden;
+}
+@media (max-width: 640px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+  .nav-links {
+    display: none;
   }
 }

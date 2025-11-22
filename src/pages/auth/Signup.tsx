@@ -1,11 +1,7 @@
-import React, { JSX, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-type SignupResponse = {
-  user?: { id: string; fullName?: string; email?: string };
-  message?: string;
-  token?: string;
-};
+type SignupResponse = { token?: string; user?: any; message?: string };
 
 export default function Signup(): JSX.Element {
   const [fullName, setFullName] = useState("");
@@ -14,27 +10,15 @@ export default function Signup(): JSX.Element {
   const [confirmPwd, setConfirmPwd] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-
   const navigate = useNavigate();
 
-  const validate = (): boolean => {
-    setError(null);
-    if (!fullName.trim()) {
-      setError("Please enter your full name.");
-      return false;
-    }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Please enter a valid email address.");
-      return false;
-    }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+  const validate = () => {
+    if (!fullName || !email || !password) {
+      setError("Please complete all fields");
       return false;
     }
     if (password !== confirmPwd) {
-      setError("Passwords do not match.");
+      setError("Passwords must match");
       return false;
     }
     return true;
@@ -42,9 +26,8 @@ export default function Signup(): JSX.Element {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccess(null);
+    setError(null);
     if (!validate()) return;
-
     setLoading(true);
     try {
       const res = await fetch("/api/auth/signup", {
@@ -52,160 +35,100 @@ export default function Signup(): JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, email, password }),
       });
-
       const data: SignupResponse = await res
         .json()
         .catch(() => ({} as SignupResponse));
-
       if (!res.ok) {
-        setError(data?.message || `Signup failed (${res.status})`);
+        setError(data.message || "Signup failed");
         setLoading(false);
         return;
       }
-
-      if (data?.token) {
+      if (data.token) {
         sessionStorage.setItem("injaz_token", data.token);
         if (data.user)
           sessionStorage.setItem("injaz_user", JSON.stringify(data.user));
         navigate("/dashboard", { replace: true });
         return;
       }
-
-      setSuccess(data?.message || "Account created. Redirecting to login...");
-      setTimeout(() => navigate("/login"), 1200);
+      navigate("/login");
     } catch (err) {
       console.error(err);
-      setError("Network error. Please try again.");
+      setError("Network error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-page px-4">
-      <div className="max-w-md w-full card">
-        <h1 className="text-2xl font-bold text-brand mb-2">
+    <div
+      style={{
+        minHeight: "80vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "3rem 1rem",
+      }}
+    >
+      <div style={{ maxWidth: 540, width: "100%" }} className="card">
+        <h2 style={{ fontSize: "1.6rem", marginBottom: 6 }}>
           Create your account
-        </h1>
-        <p className="text-sm muted mb-6">
-          Sign up to access Injaz lessons and exercises. Already have an
-          account?{" "}
-          <button
-            onClick={() => navigate("/login")}
-            className="text-accent hover:underline inline"
-          >
-            Sign in
-          </button>
+        </h2>
+        <p className="small-muted" style={{ marginBottom: 12 }}>
+          Sign up to start using Injaz
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+        <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
           <div>
-            <label
-              htmlFor="fullName"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Full name
-            </label>
+            <label className="form-label">Full name</label>
             <input
-              id="fullName"
-              type="text"
+              className="form-input"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="form-field"
-              placeholder="Your name"
-              required
             />
           </div>
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Email
-            </label>
+            <label className="form-label">Email</label>
             <input
-              id="email"
+              className="form-input"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-field"
-              placeholder="you@example.com"
-              required
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Password
-            </label>
-            <div className="input-with-button mt-1 relative">
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-field"
-                placeholder="At least 6 characters"
-                required
-                minLength={6}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((s) => !s)}
-                className="input-button"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
-            </div>
+            <label className="form-label">Password</label>
+            <input
+              className="form-input"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
           <div>
-            <label
-              htmlFor="confirmPwd"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Confirm password
-            </label>
+            <label className="form-label">Confirm password</label>
             <input
-              id="confirmPwd"
-              type={showPassword ? "text" : "password"}
+              className="form-input"
+              type="password"
               value={confirmPwd}
               onChange={(e) => setConfirmPwd(e.target.value)}
-              className="form-field"
-              placeholder="Repeat your password"
-              required
-              minLength={6}
             />
           </div>
 
           <div>
             <button
-              type="submit"
+              className="btn btn-primary"
               disabled={loading}
-              className="btn-primary w-full"
+              style={{ width: "100%" }}
             >
-              {loading ? "Creating account..." : "Create account"}
+              {loading ? "Creating..." : "Create account"}
             </button>
           </div>
 
-          <div className="text-center text-sm muted">
-            By signing up you agree to our{" "}
-            <a className="text-accent hover:underline" href="#">
-              terms
-            </a>
-            .
-          </div>
+          {error && <div className="alert alert-error">{error}</div>}
         </form>
-
-        <div role="status" aria-live="polite" className="mt-4">
-          {error && <p className="alert alert-error">{error}</p>}
-          {success && <p className="alert alert-success">{success}</p>}
-        </div>
       </div>
     </div>
   );

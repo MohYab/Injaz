@@ -1,97 +1,135 @@
-import React, { JSX } from "react";
+import React from "react";
 import Nav from "../../components/Nav";
 import { Link } from "react-router-dom";
 
-function FeatureCard({
+function Feature({
   title,
-  children,
+  desc,
   icon,
 }: {
   title: string;
-  children: React.ReactNode;
+  desc: string;
   icon?: React.ReactNode;
 }) {
   return (
-    <div className="card rounded-lg-md">
-      <div className="text-3xl">{icon ?? "📚"}</div>
-      <h3 className="text-lg font-semibold mt-2">{title}</h3>
-      <p className="text-sm muted mt-1">{children}</p>
+    <div className="feature">
+      <div className="text-2xl mb-2">{icon ?? "📘"}</div>
+      <h4>{title}</h4>
+      <p>{desc}</p>
     </div>
   );
 }
 
 export default function Home(): JSX.Element {
   return (
-    <div className="app-container min-h-screen flex flex-col">
+    <div>
       <Nav />
-      <main className="flex-1">
-        <section className="hero bg-gradient-to-r from-slate-50 to-white">
-          <div className="container-max flex flex-col lg:flex-row items-center gap-12">
-            <div className="w-full lg:w-1/2 py-8">
-              <h2 className="text-4xl font-extrabold text-brand leading-tight">
-                Injaz — Practice exercises your students will love
+      <main>
+        <section className="hero">
+          <div className="container-wide hero-inner">
+            <div>
+              <h2 className="hero-h">
+                Create interactive exercises your students will love
               </h2>
-              <p className="mt-4 text-lg muted">
-                Deliver interactive exercises, track attempts, and reward
-                students with a points system.
+              <p className="hero-sub">
+                Fast setup, beautiful reports and a reward system that keeps
+                learners engaged. Built for teachers and schools.
               </p>
 
-              <div className="mt-8 flex gap-4">
-                <Link
-                  to="/login"
-                  className="btn-accent inline-flex items-center px-6 py-3"
-                >
-                  Sign in
+              <div style={{ display: "flex", gap: 12, marginTop: 18 }}>
+                <Link to="/signup" className="btn btn-primary">
+                  Get started
                 </Link>
-
-                <a
-                  href="#features"
-                  className="btn-ghost inline-flex items-center px-6 py-3"
-                >
-                  View features
+                <a href="#features" className="btn btn-ghost">
+                  Learn more
                 </a>
               </div>
 
-              <div className="mt-6 text-sm muted">
-                <strong>Points:</strong> +10 per correct answer, −5 per wrong
-                answer. Retry allowed on failure.
+              <div style={{ marginTop: 18 }} className="small-muted">
+                Trusted by schools and teachers worldwide — secure and easy to
+                use.
               </div>
             </div>
 
-            <div className="w-full lg:w-1/2 py-8">
-              <div className="card card-lg">
-                <div className="flex items-center justify-between">
+            <div>
+              <div className="promo">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <div>
-                    <h4 className="text-sm muted">Student demo</h4>
-                    <div className="text-2xl font-semibold text-brand">
+                    <div className="small-muted">Student</div>
+                    <div
+                      style={{
+                        fontWeight: 700,
+                        fontSize: "1.25rem",
+                        marginTop: 6,
+                      }}
+                    >
                       Mohamed Saeed
                     </div>
-                    <div className="text-sm muted">Ring: Math - Grade 6A</div>
+                    <div className="small-muted" style={{ marginTop: 4 }}>
+                      Math — Grade 6A
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-xs muted">Points</div>
-                    <div className="text-xl font-bold text-accent">240</div>
+                  <div style={{ textAlign: "right" }}>
+                    <div className="small-muted">Points</div>
+                    <div
+                      style={{
+                        color: "var(--accent)",
+                        fontWeight: 800,
+                        fontSize: "1.25rem",
+                      }}
+                    >
+                      240
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-slate-50 rounded">
-                    <div className="text-xs muted">Last attempt</div>
-                    <div className="text-sm font-medium">
-                      Fractions — Compare
-                    </div>
-                    <div className="text-xs text-slate-400">
+                <div
+                  style={{
+                    marginTop: 12,
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 8,
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "#f8fafc",
+                      padding: 12,
+                      borderRadius: 8,
+                    }}
+                  >
+                    <div className="small-muted">Last attempt</div>
+                    <div style={{ fontWeight: 600 }}>Fractions — Compare</div>
+                    <div className="small-muted" style={{ marginTop: 6 }}>
                       Score 80 (Passed)
                     </div>
                   </div>
-                  <div className="p-3 bg-slate-50 rounded">
-                    <div className="text-xs muted">Next exercise</div>
-                    <div className="text-sm font-medium">
+                  <div
+                    style={{
+                      background: "#f8fafc",
+                      padding: 12,
+                      borderRadius: 8,
+                    }}
+                  >
+                    <div className="small-muted">Next exercise</div>
+                    <div style={{ fontWeight: 600 }}>
                       Operations on Fractions
                     </div>
                     <Link
                       to="/login"
-                      className="btn-sm btn-accent mt-2 inline-block"
+                      className="btn btn-primary"
+                      style={{
+                        marginTop: 8,
+                        display: "inline-block",
+                        padding: "6px 10px",
+                        fontSize: "0.85rem",
+                      }}
                     >
                       Start (login)
                     </Link>
@@ -102,21 +140,33 @@ export default function Home(): JSX.Element {
           </div>
         </section>
 
-        <section id="features" className="container-max py-12">
-          <h3 className="text-2xl font-bold text-brand mb-6">Core features</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <FeatureCard title="Lesson Management" icon="🗂️">
-              Teachers can create lessons and exercises (MCQ + True/False),
-              archive content and manage students.
-            </FeatureCard>
-            <FeatureCard title="Exercise Runner" icon="📝">
-              Students answer questions, submit attempts and see immediate
-              results. Retry allowed on failure.
-            </FeatureCard>
-            <FeatureCard title="Scoring System" icon="⭐">
-              Points: +10 correct, −5 incorrect. Points are added to student's
-              balance after each submission.
-            </FeatureCard>
+        <section
+          id="features"
+          className="container-wide"
+          style={{ padding: "2.5rem 0" }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 16,
+            }}
+          >
+            <Feature
+              title="Lesson Management"
+              desc="Create lessons and exercises, manage content and students."
+              icon="🗂️"
+            />
+            <Feature
+              title="Exercise Runner"
+              desc="Students answer questions and see results instantly."
+              icon="📝"
+            />
+            <Feature
+              title="Scoring System"
+              desc="Points, badges and progress tracking for motivation."
+              icon="⭐"
+            />
           </div>
         </section>
       </main>

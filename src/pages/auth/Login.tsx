@@ -1,4 +1,5 @@
-import React, { JSX, useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type LoginResponse = {
   token?: string;
@@ -12,16 +13,11 @@ export default function Login(): JSX.Element {
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const validate = () => {
     if (!email || !password) {
-      setError("Please provide email and password.");
-      return false;
-    }
-    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRe.test(email)) {
-      setError("Please enter a valid email address.");
+      setError("Please fill email and password");
       return false;
     }
     return true;
@@ -30,9 +26,7 @@ export default function Login(): JSX.Element {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
     if (!validate()) return;
-
     setLoading(true);
     try {
       const res = await fetch("/api/auth/login", {
@@ -40,125 +34,98 @@ export default function Login(): JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       const data: LoginResponse = await res
         .json()
         .catch(() => ({} as LoginResponse));
-
       if (!res.ok) {
         setError(data?.message || `Login failed (${res.status})`);
         setLoading(false);
         return;
       }
-
       if (data.token) {
         const storage = remember ? localStorage : sessionStorage;
         storage.setItem("injaz_token", data.token);
-        storage.setItem("injaz_user", JSON.stringify(data.user ?? {}));
-        window.location.href = "/dashboard";
+        if (data.user) storage.setItem("injaz_user", JSON.stringify(data.user));
+        navigate("/dashboard", { replace: true });
       } else {
-        setError("Login succeeded but no token returned by server.");
+        setError("No token returned.");
       }
     } catch (err) {
       console.error(err);
-      setError("Network error. Please try again.");
+      setError("Network error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-page px-4">
-      <div className="max-w-md w-full card">
-        <h1 className="text-2xl font-bold text-brand mb-2">Sign in to Injaz</h1>
-        <p className="text-sm muted mb-6">
-          Enter your school account to access lessons and exercises.
+    <div
+      style={{
+        minHeight: "80vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "3rem 1rem",
+      }}
+    >
+      <div style={{ maxWidth: 480, width: "100%" }} className="card">
+        <h2 style={{ fontSize: "1.5rem", marginBottom: 6 }}>Sign in</h2>
+        <p className="small-muted" style={{ marginBottom: 12 }}>
+          Enter your account to continue
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Email
-            </label>
+            <label className="form-label">Email</label>
             <input
-              id="email"
-              type="email"
+              className="form-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-field"
-              placeholder="you@example.com"
-              required
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Password
-            </label>
-            <div className="input-with-button mt-1 relative">
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-field"
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((s) => !s)}
-                className="input-button"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
-            </div>
+            <label className="form-label">Password</label>
+            <input
+              className="form-input"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
-          <div className="flex items-center justify-between">
-            <label className="inline-flex items-center space-x-2">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <input
                 type="checkbox"
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
-                className="h-4 w-4 text-accent rounded border-gray-300"
-              />
-              <span className="text-sm muted">Remember me</span>
+              />{" "}
+              Remember
             </label>
-            <a href="#" className="text-sm text-accent hover:underline">
-              Forgot password?
+            <a className="small-muted" href="#">
+              Forgot?
             </a>
           </div>
 
           <div>
             <button
-              type="submit"
+              className="btn btn-primary"
               disabled={loading}
-              className="btn-accent w-full"
+              style={{ width: "100%" }}
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? "Signing..." : "Sign in"}
             </button>
           </div>
 
-          <div className="text-center text-sm muted">
-            Don't have an account?{" "}
-            <a href="/signup" className="text-accent hover:underline">
-              Request access
-            </a>
-          </div>
+          {error && <div className="alert alert-error">{error}</div>}
         </form>
-
-        <div role="status" aria-live="polite" className="mt-4">
-          {error && <p className="alert alert-error">{error}</p>}
-        </div>
       </div>
     </div>
   );

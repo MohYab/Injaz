@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Nav(): JSX.Element {
@@ -20,52 +20,42 @@ export default function Nav(): JSX.Element {
 
   return (
     <header className="site-header">
-      <div className="container-max flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="brand-badge">IJ</div>
-          <div>
-            <h1 className="text-lg font-semibold text-brand">Injaz</h1>
-            <p className="text-sm muted">Exercises platform</p>
+      <div className="container-wide nav-inner">
+        <div className="brand">
+          <div className="logo">IJ</div>
+          <div className="title">
+            <h1>Injaz</h1>
+            <div className="subtitle">Exercises platform</div>
           </div>
         </div>
 
-        <nav className="site-nav">
-          <a className="text-slate-600 hover:text-brand" href="#lessons">
-            Lessons
-          </a>
-          <a className="text-slate-600 hover:text-brand" href="#features">
-            Features
-          </a>
+        <div className="nav-links">
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#docs">Docs</a>
+        </div>
 
+        <div className="cta">
           {token ? (
             <>
-              <Link to="/dashboard" className="btn-primary ml-4">
+              <Link to="/dashboard" className="btn btn-primary">
                 Dashboard
               </Link>
-              <button onClick={handleSignOut} className="btn-ghost ml-2">
+              <button onClick={handleSignOut} className="btn btn-ghost">
                 Sign out
               </button>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="btn-accent ml-4"
-                id="injaz-login-btn"
-              >
-                Sign in
-              </Link>
-
-              <Link
-                to="/signup"
-                className="btn-ghost ml-2"
-                id="injaz-signup-btn"
-              >
+              <Link to="/signup" className="btn btn-ghost">
                 Sign up
+              </Link>
+              <Link to="/login" className="btn btn-primary">
+                Sign in
               </Link>
             </>
           )}
-        </nav>
+        </div>
       </div>
     </header>
   );
