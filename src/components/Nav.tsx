@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Nav(): JSX.Element {
@@ -7,6 +7,10 @@ export default function Nav(): JSX.Element {
     typeof window !== "undefined" &&
     (sessionStorage.getItem("injaz_token") ||
       localStorage.getItem("injaz_token"));
+
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const btnRef = useRef<HTMLButtonElement | null>(null);
 
   const handleSignOut = () => {
     try {
@@ -17,6 +21,46 @@ export default function Nav(): JSX.Element {
     } catch (e) {}
     navigate("/login", { replace: true });
   };
+
+  // Lock scroll when open
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = prev || "";
+    }
+    return () => {
+      document.body.style.overflow = prev || "";
+    };
+  }, [open]);
+
+  // Close menu when clicking outside or pressing Escape
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      const target = e.target as Node;
+      if (!open) return;
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(target) &&
+        btnRef.current &&
+        !btnRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("click", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("click", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const onNavigateClose = () => setOpen(false);
 
   return (
     <header className="site-header">
@@ -29,13 +73,17 @@ export default function Nav(): JSX.Element {
           </div>
         </div>
 
-        <div className="nav-links">
+        {/* Desktop links */}
+        <div className="nav-links hide-mobile" aria-hidden={open}>
+          <a href="#about">About Us</a>
+          <a href="#goals">Goals</a>
           <a href="#features">Features</a>
           <a href="#pricing">Pricing</a>
-          <a href="#docs">Docs</a>
+          <a href="#contact">Contact US</a>
+          <a href="#download">Download Now</a>
         </div>
 
-        <div className="cta">
+        <div className="cta hide-mobile">
           {token ? (
             <>
               <Link to="/dashboard" className="btn btn-primary">
@@ -56,6 +104,139 @@ export default function Nav(): JSX.Element {
             </>
           )}
         </div>
+
+        {/* Hamburger (mobile) */}
+        <div className="only-mobile" aria-hidden={false}>
+          <button
+            ref={btnRef}
+            className="hamburger"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((s) => !s)}
+          >
+            {open ? (
+              // Close (X) icon
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M6 6L18 18M6 18L18 6"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            ) : (
+              // Menu icon
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 6h16M4 12h16M4 18h16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Backdrop */}
+        <div
+          className={`mobile-backdrop ${open ? "open" : ""}`}
+          onClick={() => setOpen(false)}
+          aria-hidden={!open}
+        />
+
+        {/* Mobile off-canvas menu (slide in from right) */}
+        <aside
+          id="mobile-menu"
+          ref={menuRef}
+          className={`mobile-menu ${open ? "open" : ""}`}
+          role="dialog"
+          aria-modal="true"
+        >
+          <nav className="mobile-menu-inner" aria-label="Mobile">
+            <div className="mobile-links">
+              <a href="#about" onClick={onNavigateClose}>
+                About Us
+              </a>
+              <a href="#goals" onClick={onNavigateClose}>
+                Goals
+              </a>
+              <a href="#features" onClick={onNavigateClose}>
+                Features
+              </a>
+              <a href="#pricing" onClick={onNavigateClose}>
+                Pricing
+              </a>
+              <a href="#contact" onClick={onNavigateClose}>
+                Contact US
+              </a>
+              <a href="#download" onClick={onNavigateClose}>
+                Download Now
+              </a>
+            </div>
+
+            <div className="mobile-cta">
+              {token ? (
+                <>
+                  <Link
+                    to="/dashboard"
+                    onClick={onNavigateClose}
+                    className="btn btn-primary"
+                    style={{ width: "100%" }}
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      onNavigateClose();
+                      handleSignOut();
+                    }}
+                    className="btn btn-ghost"
+                    style={{ width: "100%", marginTop: 8 }}
+                  >
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/signup"
+                    onClick={onNavigateClose}
+                    className="btn btn-ghost"
+                    style={{ width: "100%" }}
+                  >
+                    Sign up
+                  </Link>
+                  <Link
+                    to="/login"
+                    onClick={onNavigateClose}
+                    className="btn btn-primary"
+                    style={{ width: "100%", marginTop: 8 }}
+                  >
+                    Sign in
+                  </Link>
+                </>
+              )}
+            </div>
+          </nav>
+        </aside>
       </div>
     </header>
   );
