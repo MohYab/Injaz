@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 /* Google fonts used: Inter (body) + Merriweather (hero headings) */
 /* Colors and tokens inspired by zuolfa.com */
@@ -56,7 +56,11 @@ body.menu-open {
 @layer components {
   /* Container */
   .container-wide {
-    @apply max-w-6xl mx-auto px-6;
+    max-width: 72rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
   /* Header / Nav */
@@ -69,7 +73,11 @@ body.menu-open {
     -webkit-backdrop-filter: blur(6px);
   }
   .site-header .nav-inner {
-    @apply flex items-center justify-between py-6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
   }
   .brand {
     display: flex;
@@ -152,7 +160,15 @@ body.menu-open {
     position: relative;
   }
   .hero-inner {
-    @apply grid grid-cols-1 lg:grid-cols-2 gap-10 items-center;
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 2.5rem;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero-inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   .hero-h {
     font-family: "Merriweather", Georgia, serif;
@@ -183,7 +199,9 @@ body.menu-open {
 
   /* Feature cards */
   .feature-grid {
-    @apply grid grid-cols-3 gap-4;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
   }
   .feature {
     background: white;
