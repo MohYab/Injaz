@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Nav(): JSX.Element {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const token =
     typeof window !== "undefined"
       ? sessionStorage.getItem("injaz_token") ||
@@ -76,31 +79,35 @@ export default function Nav(): JSX.Element {
 
         {/* Desktop links */}
         <div className="nav-links hide-mobile" aria-hidden={open}>
-          <a href="#about">About Us</a>
-          <a href="#goals">Goals</a>
-          <a href="#features">Features</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#contact">Contact US</a>
-          <a href="#download">Download Now</a>
+          <Link to="/about">{t("nav.about")}</Link>
+          <a href="#goals">{t("nav.goals")}</a>
+          <a href="#features">{t("nav.features")}</a>
+          <a href="#pricing">{t("nav.pricing")}</a>
+          <Link to="/contact">{t("nav.contact")}</Link>
+          <a href="#download">{t("nav.download")}</a>
         </div>
 
         <div className="cta hide-mobile">
+          <LanguageSwitcher />
           {token ? (
             <>
+              <Link to="/exercises" className="btn btn-ghost">
+                {t("nav.exercises")}
+              </Link>
               <Link to="/dashboard" className="btn btn-primary">
-                Dashboard
+                {t("nav.dashboard")}
               </Link>
               <button onClick={handleSignOut} className="btn btn-ghost">
-                Sign out
+                {t("nav.signout")}
               </button>
             </>
           ) : (
             <>
               <Link to="/signup" className="btn btn-ghost">
-                Sign up
+                {t("nav.signup")}
               </Link>
               <Link to="/login" className="btn btn-primary">
-                Sign in
+                {t("nav.signin")}
               </Link>
             </>
           )}
@@ -173,36 +180,47 @@ export default function Nav(): JSX.Element {
         >
           <nav className="mobile-menu-inner" aria-label="Mobile">
             <div className="mobile-links">
-              <a href="#about" onClick={onNavigateClose}>
-                About Us
-              </a>
+              <Link to="/about" onClick={onNavigateClose}>
+                {t("nav.about")}
+              </Link>
               <a href="#goals" onClick={onNavigateClose}>
-                Goals
+                {t("nav.goals")}
               </a>
               <a href="#features" onClick={onNavigateClose}>
-                Features
+                {t("nav.features")}
               </a>
               <a href="#pricing" onClick={onNavigateClose}>
-                Pricing
+                {t("nav.pricing")}
               </a>
-              <a href="#contact" onClick={onNavigateClose}>
-                Contact US
-              </a>
+              <Link to="/contact" onClick={onNavigateClose}>
+                {t("nav.contact")}
+              </Link>
               <a href="#download" onClick={onNavigateClose}>
-                Download Now
+                {t("nav.download")}
               </a>
             </div>
 
             <div className="mobile-cta">
+              <div style={{ marginBottom: 8 }}>
+                <LanguageSwitcher />
+              </div>
               {token ? (
                 <>
+                  <Link
+                    to="/exercises"
+                    onClick={onNavigateClose}
+                    className="btn btn-ghost"
+                    style={{ width: "100%" }}
+                  >
+                    {t("nav.exercises")}
+                  </Link>
                   <Link
                     to="/dashboard"
                     onClick={onNavigateClose}
                     className="btn btn-primary"
-                    style={{ width: "100%" }}
+                    style={{ width: "100%", marginTop: 8 }}
                   >
-                    Dashboard
+                    {t("nav.dashboard")}
                   </Link>
                   <button
                     onClick={() => {
@@ -212,7 +230,7 @@ export default function Nav(): JSX.Element {
                     className="btn btn-ghost"
                     style={{ width: "100%", marginTop: 8 }}
                   >
-                    Sign out
+                    {t("nav.signout")}
                   </button>
                 </>
               ) : (
@@ -223,7 +241,7 @@ export default function Nav(): JSX.Element {
                     className="btn btn-ghost"
                     style={{ width: "100%" }}
                   >
-                    Sign up
+                    {t("nav.signup")}
                   </Link>
                   <Link
                     to="/login"
@@ -231,7 +249,7 @@ export default function Nav(): JSX.Element {
                     className="btn btn-primary"
                     style={{ width: "100%", marginTop: 8 }}
                   >
-                    Sign in
+                    {t("nav.signin")}
                   </Link>
                 </>
               )}

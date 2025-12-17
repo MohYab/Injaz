@@ -1,6 +1,7 @@
 import React from "react";
 import Nav from "../../components/Nav";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 function Feature({
   title,
@@ -21,6 +22,7 @@ function Feature({
 }
 
 export default function Home(): JSX.Element {
+  const { t } = useLanguage();
   return (
     <div>
       <Nav />
@@ -29,25 +31,23 @@ export default function Home(): JSX.Element {
           <div className="container-wide hero-inner">
             <div>
               <h2 className="hero-h">
-                Create interactive exercises your students will love
+                {t("home.heroTitle")}
               </h2>
               <p className="hero-sub">
-                Fast setup, beautiful reports and a reward system that keeps
-                learners engaged. Built for teachers and schools.
+                {t("home.heroSubtitle")}
               </p>
 
               <div style={{ display: "flex", gap: 12, marginTop: 18 }}>
                 <Link to="/signup" className="btn btn-primary">
-                  Get started
+                  {t("home.getStarted")}
                 </Link>
                 <a href="#features" className="btn btn-ghost">
-                  Learn more
+                  {t("home.learnMore")}
                 </a>
               </div>
 
               <div style={{ marginTop: 18 }} className="small-muted">
-                Trusted by schools and teachers worldwide — secure and easy to
-                use.
+                {t("home.trusted")}
               </div>
             </div>
 
@@ -153,18 +153,18 @@ export default function Home(): JSX.Element {
             }}
           >
             <Feature
-              title="Lesson Management"
-              desc="Create lessons and exercises, manage content and students."
+              title={t("home.lessonManagement")}
+              desc={t("home.lessonManagementDesc")}
               icon="🗂️"
             />
             <Feature
-              title="Exercise Runner"
-              desc="Students answer questions and see results instantly."
+              title={t("home.exerciseRunner")}
+              desc={t("home.exerciseRunnerDesc")}
               icon="📝"
             />
             <Feature
-              title="Scoring System"
-              desc="Points, badges and progress tracking for motivation."
+              title={t("home.scoringSystem")}
+              desc={t("home.scoringSystemDesc")}
               icon="⭐"
             />
           </div>

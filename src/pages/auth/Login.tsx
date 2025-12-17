@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 type LoginResponse = {
   token?: string;
@@ -14,6 +15,7 @@ export default function Login(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const validate = () => {
     if (!email || !password) {
@@ -69,23 +71,24 @@ export default function Login(): JSX.Element {
       }}
     >
       <div style={{ maxWidth: 480, width: "100%" }} className="card">
-        <h2 style={{ fontSize: "1.5rem", marginBottom: 6 }}>Sign in</h2>
+        <h2 style={{ fontSize: "1.5rem", marginBottom: 6 }}>{t("auth.login")}</h2>
         <p className="small-muted" style={{ marginBottom: 12 }}>
-          Enter your account to continue
+          {t("auth.enterAccount")}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
           <div>
-            <label className="form-label">Email</label>
+            <label className="form-label">{t("auth.email")}</label>
             <input
               className="form-input"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="form-label">Password</label>
+            <label className="form-label">{t("auth.password")}</label>
             <input
               className="form-input"
               type="password"
@@ -107,10 +110,10 @@ export default function Login(): JSX.Element {
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
               />{" "}
-              Remember
+              {t("auth.remember")}
             </label>
             <a className="small-muted" href="#">
-              Forgot?
+              {t("auth.forgot")}
             </a>
           </div>
 
@@ -120,7 +123,7 @@ export default function Login(): JSX.Element {
               disabled={loading}
               style={{ width: "100%" }}
             >
-              {loading ? "Signing..." : "Sign in"}
+              {loading ? t("common.loading") : t("auth.login")}
             </button>
           </div>
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 type SignupResponse = { token?: string; user?: any; message?: string };
 
@@ -11,14 +12,15 @@ export default function Signup(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const validate = () => {
     if (!fullName || !email || !password) {
-      setError("Please complete all fields");
+      setError(t("auth.completeFields"));
       return false;
     }
     if (password !== confirmPwd) {
-      setError("Passwords must match");
+      setError(t("auth.passwordsMatch"));
       return false;
     }
     return true;
@@ -39,7 +41,7 @@ export default function Signup(): JSX.Element {
         .json()
         .catch(() => ({} as SignupResponse));
       if (!res.ok) {
-        setError(data.message || "Signup failed");
+        setError(data.message || t("auth.signupFailed"));
         setLoading(false);
         return;
       }
@@ -53,7 +55,7 @@ export default function Signup(): JSX.Element {
       navigate("/login");
     } catch (err) {
       console.error(err);
-      setError("Network error");
+      setError(t("auth.networkError"));
     } finally {
       setLoading(false);
     }
@@ -71,15 +73,15 @@ export default function Signup(): JSX.Element {
     >
       <div style={{ maxWidth: 540, width: "100%" }} className="card">
         <h2 style={{ fontSize: "1.6rem", marginBottom: 6 }}>
-          Create your account
+          {t("auth.createAccount")}
         </h2>
         <p className="small-muted" style={{ marginBottom: 12 }}>
-          Sign up to start using Injaz
+          {t("auth.signupDescription")}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
           <div>
-            <label className="form-label">Full name</label>
+            <label className="form-label">{t("auth.fullName")}</label>
             <input
               className="form-input"
               value={fullName}
@@ -88,7 +90,7 @@ export default function Signup(): JSX.Element {
           </div>
 
           <div>
-            <label className="form-label">Email</label>
+            <label className="form-label">{t("auth.email")}</label>
             <input
               className="form-input"
               type="email"
@@ -98,7 +100,7 @@ export default function Signup(): JSX.Element {
           </div>
 
           <div>
-            <label className="form-label">Password</label>
+            <label className="form-label">{t("auth.password")}</label>
             <input
               className="form-input"
               type="password"
@@ -108,7 +110,7 @@ export default function Signup(): JSX.Element {
           </div>
 
           <div>
-            <label className="form-label">Confirm password</label>
+            <label className="form-label">{t("auth.confirmPassword")}</label>
             <input
               className="form-input"
               type="password"
@@ -123,7 +125,7 @@ export default function Signup(): JSX.Element {
               disabled={loading}
               style={{ width: "100%" }}
             >
-              {loading ? "Creating..." : "Create account"}
+              {loading ? t("auth.creating") : t("auth.signup")}
             </button>
           </div>
 
