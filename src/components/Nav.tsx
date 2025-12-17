@@ -4,9 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 export default function Nav(): JSX.Element {
   const navigate = useNavigate();
   const token =
-    typeof window !== "undefined" &&
-    (sessionStorage.getItem("injaz_token") ||
-      localStorage.getItem("injaz_token"));
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("injaz_token") ||
+        localStorage.getItem("injaz_token")
+      : null;
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);

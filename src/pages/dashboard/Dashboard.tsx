@@ -6,7 +6,14 @@ export default function Dashboard(): JSX.Element {
       ? sessionStorage.getItem("injaz_user") ||
         localStorage.getItem("injaz_user")
       : null;
-  const user = stored ? JSON.parse(stored) : null;
+  let user = null;
+  if (stored) {
+    try {
+      user = JSON.parse(stored);
+    } catch (e) {
+      console.error("Failed to parse user data:", e);
+    }
+  }
 
   return (
     <div style={{ paddingTop: 24 }}>

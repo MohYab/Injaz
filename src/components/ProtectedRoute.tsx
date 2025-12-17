@@ -7,9 +7,10 @@ type Props = {
 
 export default function ProtectedRoute({ children }: Props): JSX.Element {
   const token =
-    typeof window !== "undefined" &&
-    (sessionStorage.getItem("injaz_token") ||
-      localStorage.getItem("injaz_token"));
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("injaz_token") ||
+        localStorage.getItem("injaz_token")
+      : null;
 
   if (!token) {
     return <Navigate to="/login" replace />;
