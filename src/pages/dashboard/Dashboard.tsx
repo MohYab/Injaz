@@ -2,22 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Nav from "../../components/Nav";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Dashboard(): JSX.Element {
   const { t } = useLanguage();
-  const stored =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("injaz_user") ||
-        localStorage.getItem("injaz_user")
-      : null;
-  let user = null;
-  if (stored) {
-    try {
-      user = JSON.parse(stored);
-    } catch (e) {
-      console.error("Failed to parse user data:", e);
-    }
-  }
+  const { user } = useAuth();
 
   return (
     <div>

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
-
-type SignupResponse = { token?: string; user?: any; message?: string };
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Signup(): JSX.Element {
   const [fullName, setFullName] = useState("");
@@ -13,6 +12,7 @@ export default function Signup(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { signup } = useAuth();
 
   const validate = () => {
     if (!fullName || !email || !password) {
@@ -32,27 +32,12 @@ export default function Signup(): JSX.Element {
     if (!validate()) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, email, password }),
-      });
-      const data: SignupResponse = await res
-        .json()
-        .catch(() => ({} as SignupResponse));
-      if (!res.ok) {
-        setError(data.message || t("auth.signupFailed"));
-        setLoading(false);
-        return;
-      }
-      if (data.token) {
-        sessionStorage.setItem("injaz_token", data.token);
-        if (data.user)
-          sessionStorage.setItem("injaz_user", JSON.stringify(data.user));
+      const result = await signup(fullName, email, password);
+      if (result.success) {
         navigate("/dashboard", { replace: true });
-        return;
+      } else {
+        setError(result.message || t("auth.signupFailed"));
       }
-      navigate("/login");
     } catch (err) {
       console.error(err);
       setError(t("auth.networkError"));

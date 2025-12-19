@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
-
-type LoginResponse = {
-  token?: string;
-  user?: { id: string; fullName?: string; email?: string };
-  message?: string;
-};
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Login(): JSX.Element {
   const [email, setEmail] = useState("");
@@ -16,6 +11,7 @@ export default function Login(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { login } = useAuth();
 
   const validate = () => {
     if (!email || !password) {
@@ -31,26 +27,11 @@ export default function Login(): JSX.Element {
     if (!validate()) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data: LoginResponse = await res
-        .json()
-        .catch(() => ({} as LoginResponse));
-      if (!res.ok) {
-        setError(data?.message || `Login failed (${res.status})`);
-        setLoading(false);
-        return;
-      }
-      if (data.token) {
-        const storage = remember ? localStorage : sessionStorage;
-        storage.setItem("injaz_token", data.token);
-        if (data.user) storage.setItem("injaz_user", JSON.stringify(data.user));
+      const result = await login(email, password, remember);
+      if (result.success) {
         navigate("/dashboard", { replace: true });
       } else {
-        setError("No token returned.");
+        setError(result.message || "Login failed");
       }
     } catch (err) {
       console.error(err);

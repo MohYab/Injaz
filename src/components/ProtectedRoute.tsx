@@ -1,18 +1,20 @@
 import React, { JSX } from "react";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 type Props = {
   children: JSX.Element;
 };
 
 export default function ProtectedRoute({ children }: Props): JSX.Element {
-  const token =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("injaz_token") ||
-        localStorage.getItem("injaz_token")
-      : null;
+  const { isAuthenticated, loading } = useAuth();
 
-  if (!token) {
+  if (loading) {
+    // Show loading state while checking authentication
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 

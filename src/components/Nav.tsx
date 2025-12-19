@@ -1,28 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useAuth } from "../contexts/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Nav(): JSX.Element {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const token =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("injaz_token") ||
-        localStorage.getItem("injaz_token")
-      : null;
+  const { isAuthenticated, logout } = useAuth();
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const btnRef = useRef<HTMLButtonElement | null>(null);
 
   const handleSignOut = () => {
-    try {
-      sessionStorage.removeItem("injaz_token");
-      sessionStorage.removeItem("injaz_user");
-      localStorage.removeItem("injaz_token");
-      localStorage.removeItem("injaz_user");
-    } catch (e) {}
+    logout();
     navigate("/login", { replace: true });
   };
 
@@ -89,7 +81,7 @@ export default function Nav(): JSX.Element {
 
         <div className="cta hide-mobile">
           <LanguageSwitcher />
-          {token ? (
+          {isAuthenticated ? (
             <>
               <Link to="/exercises" className="btn btn-ghost">
                 {t("nav.exercises")}
@@ -204,7 +196,7 @@ export default function Nav(): JSX.Element {
               <div style={{ marginBottom: 8 }}>
                 <LanguageSwitcher />
               </div>
-              {token ? (
+              {isAuthenticated ? (
                 <>
                   <Link
                     to="/exercises"
